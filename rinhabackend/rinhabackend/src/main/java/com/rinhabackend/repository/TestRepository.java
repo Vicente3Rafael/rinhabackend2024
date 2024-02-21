@@ -1,5 +1,6 @@
 package com.rinhabackend.repository;
 
+import com.rinhabackend.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -17,5 +18,11 @@ public class TestRepository {
         String sql = "select * from countries";
 
         return jdbcTemplate.queryForList(sql);
+    }
+
+    public User getUserById(int id) {
+        String sql = "select * from user where id = ?";
+
+        return jdbcTemplate.queryForObject(sql, User.class, id);
     }
 }
