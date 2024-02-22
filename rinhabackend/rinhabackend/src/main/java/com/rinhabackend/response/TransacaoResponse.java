@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class TransacaoResponse {
 
-    private String limite;
-    private String saldo;
+    private int limite;
+    private int saldo;
 }

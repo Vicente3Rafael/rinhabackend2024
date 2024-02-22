@@ -18,26 +18,47 @@ public class RestCliente {
     @PostMapping("/{id}/transacoes")
     public ResponseEntity<?> transacoes(@PathVariable int id, @RequestBody TransacaoRequest request) {
         TransacaoResponse response = new TransacaoResponse();
+
+        Object object = processarTransacao(id, request);
         try {
-            response = processarTransacao(id, request);
+            ResponseEntity responseEntity = (ResponseEntity) object;
+
+            return responseEntity;
         }catch (Exception e) {
-            e.printStackTrace();
-
-            return ResponseEntity.badRequest().build();
+            response = (TransacaoResponse) object;
         }
-
 
         return ResponseEntity.ok(response);
     }
 
-    public TransacaoResponse processarTransacao(int id, TransacaoRequest request) throws Exception {
+    public Object processarTransacao(int id, TransacaoRequest request) {
         String operacao = request.getTipo();
         if(!operacao.equals("c") && !operacao.equals("d")) {
-            return null;
+            return ResponseEntity.badRequest().build();
         }
 
         User user = repository.getUserById(id);
+        if(user == null) {
+            return ResponseEntity.notFound().build();
+        }
 
-        return null;
+        int limite = user.getLimite();
+        int valor = request.getValor();
+        int saldoInicial = user.getSaldoInicial();
+        if(operacao.equals("d")) {
+            saldoInicial = saldoInicial - valor;
+
+            if(saldoInicial < 0 && (saldoInicial*-1) > limite) {
+                return ResponseEntity.unprocessableEntity().build();
+            }
+        }else {
+            saldoInicial = saldoInicial + valor;
+        }
+
+        TransacaoResponse response = new TransacaoResponse();
+        response.setLimite(limite);
+        response.setSaldo(saldoInicial);
+
+        return response;
     }
 }
