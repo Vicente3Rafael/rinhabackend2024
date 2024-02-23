@@ -4,6 +4,14 @@ CREATE TABLE USERS(
                        SALDO_INICIAL BIGINT
 );
 
+CREATE TABLE transacoes (
+                      VALOR BIGINT,
+                      TIPO VARCHAR,
+                      DESCRICAO VARCHAR,
+                      DATE DATE,
+                      USER_ID BIGINT
+);
+
 INSERT INTO USERS (ID, LIMITE, SALDO_INICIAL) VALUES (1, 100000, 0);
 INSERT INTO USERS (ID, LIMITE, SALDO_INICIAL) VALUES (2, 80000, 0);
 INSERT INTO USERS (ID, LIMITE, SALDO_INICIAL) VALUES (3, 1000000, 0);
